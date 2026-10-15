@@ -1,8 +1,10 @@
 package orionlesh.paymentgateway.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import orionlesh.paymentgateway.model.PaymentEntity;
 import orionlesh.paymentgateway.model.PaymentStatus;
@@ -12,6 +14,7 @@ import orionlesh.paymentgateway.repository.PaymentRepository;
 
 import java.math.BigDecimal;
 
+@Component
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -38,7 +41,7 @@ public class PaymentService {
 
     @Transactional
     public PaymentDto createPayment(CreatePaymentRequest cpq) {
-        if (MAX_AMOUNT.compareTo(cpq.amount()) < 0) {
+        if (cpq.amount().compareTo(MAX_AMOUNT) > 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount is too large");
         }
         PaymentEntity paymentEntity = new PaymentEntity(cpq.userId(), cpq.amount(), PaymentStatus.NEW);
@@ -54,7 +57,7 @@ public class PaymentService {
         return convertEntityToDto(paymentEntity);
     }
 
-    public PaymentEntity findPaymentOrThrow(Long id) {
+    private PaymentEntity findPaymentOrThrow(Long id) {
         return paymentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "payment with id" + id + "was not found"));
     }
 }

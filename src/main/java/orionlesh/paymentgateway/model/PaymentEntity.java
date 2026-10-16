@@ -25,9 +25,10 @@ public class PaymentEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount", nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;
 
+    @Column(name = "status", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 

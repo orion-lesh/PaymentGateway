@@ -43,6 +43,9 @@ public class PaymentService {
     @Transactional
     public PaymentDto confirmPayment(Long id) {
         PaymentEntity paymentEntity = findPaymentOrThrow(id);
+    if (paymentEntity.getPaymentStatus() != PaymentStatus.NEW) {
+        throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment status is not new");
+    }
         paymentEntity.setPaymentStatus(PaymentStatus.PROCESSED);
         paymentRepository.save(paymentEntity);
         return paymentEntityMapper.convertEntityToDto(paymentEntity);

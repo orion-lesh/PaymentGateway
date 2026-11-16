@@ -2,4 +2,4 @@ databaseChangeLog:
   - include:
       file: classpath:db/changelog/sql/001-create-payments.sql
   - include:
-      file: classpath:db/changelog/sql/001-create-users.sql
+      file: classpath:db/changelog/sql/002-create-users.sql

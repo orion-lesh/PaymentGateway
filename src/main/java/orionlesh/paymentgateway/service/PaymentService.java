@@ -3,6 +3,7 @@ package orionlesh.paymentgateway.service;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import orionlesh.paymentgateway.model.PaymentEntity;
 import orionlesh.paymentgateway.model.PaymentStatus;
@@ -10,19 +11,23 @@ import orionlesh.paymentgateway.model.dto.CreatePaymentRequest;
 import orionlesh.paymentgateway.model.dto.PaymentDto;
 import orionlesh.paymentgateway.model.dto.PaymentEntityMapper;
 import orionlesh.paymentgateway.repository.PaymentRepository;
+import orionlesh.paymentgateway.repository.UserRepository;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
-@Component
+@Service
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final PaymentEntityMapper paymentEntityMapper;
     private final BigDecimal MAX_AMOUNT = new BigDecimal("100000.00");
+    private final UserRepository userRepository;
 
-    public PaymentService(PaymentRepository paymentRepository, PaymentEntityMapper paymentEntityMapper) {
+    public PaymentService(PaymentRepository paymentRepository, PaymentEntityMapper paymentEntityMapper, UserRepository userRepository) {
         this.paymentRepository = paymentRepository;
         this.paymentEntityMapper = paymentEntityMapper;
+        this.userRepository = userRepository;
     }
 
     public PaymentDto getPayment(Long id) {
@@ -32,6 +37,10 @@ public class PaymentService {
 
     @Transactional
     public PaymentDto createPayment(CreatePaymentRequest cpq) {
+
+        if(!userRepository.existsById(cpq.userId())){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id: " + cpq.userId() + "not found");
+        }
         if (cpq.amount().compareTo(MAX_AMOUNT) > 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount is too large");
         }

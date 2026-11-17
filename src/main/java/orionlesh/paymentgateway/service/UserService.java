@@ -18,7 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserEntityMapper userEntityMapper;
 
-    public UserService(UserRepository userRepository, UserEntityMapper userEntityMapper, PaymentRepository paymentRepository) {
+    public UserService(UserRepository userRepository, UserEntityMapper userEntityMapper) {
         this.userRepository = userRepository;
         this.userEntityMapper = userEntityMapper;
     }

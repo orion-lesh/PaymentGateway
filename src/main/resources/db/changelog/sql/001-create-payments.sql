@@ -1,3 +1,5 @@
+--liquibase formatted sql
+--changeset oleksii:001
 CREATE TABLE IF NOT EXISTS payments
 (
     id         BIGSERIAL PRIMARY KEY,

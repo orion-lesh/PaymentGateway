@@ -11,7 +11,7 @@ public record PaymentDto(
         BigDecimal amount,
         PaymentStatus paymentStatus,
         LocalDateTime createdAt,
-        LocalDateTime updateAt
+        LocalDateTime updatedAt
 ) {
 
 }
